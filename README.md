@@ -1,13 +1,7 @@
 # Azure HD Insights to Confluent Cloud - Transactional and Analytics
 
-In today's fast-paced business environment, companies rely heavily on technology to streamline their operations and stay ahead of the competition. One such company, ABC delivery, faced several challenges with their Kafka implementation on Azure HDInsights, including a lack of expertise and operational knowledge to maintain their Kafka environment. To overcome these challenges and ensure high availability and reliability for their core operations, they decided to migrate to Confluent Cloud, a managed Kafka solution that offers several features to support their business needs.
-This demo walks you through migration process from OSK to Confluent Cloud , setting up Schema Registry to ensure data consistency and  connectors to connect source and sink.
-You'll learn about:
-- Migration from OSK to Confluent Cloud
-- A fully managed Debezium SQL Server Connector (Source) , MongoDB Atlas Connector to stream database to Confluent Cloud
-- JDBC Sink Connector to stream data from Confluent Cloud to database
-- Schema Registry for data consistency
-- .Net Kafka Client to integrate Confluent Cloud with their .Net applications.
+In today's fast-paced business environment, companies rely heavily on technology to streamline their operations and stay ahead of the competition. One such company, ABC grocery delivery, faced several challenges with their Kafka implementation on Azure HDInsights, including a lack of expertise and operational knowledge to maintain their Kafka environment. To overcome these challenges and ensure high availability and reliability for their core operations, they decided to migrate to Confluent Cloud, a managed Kafka solution that offers several features to support their business needs.
+This demo walks you through an realtime processing of orders using Confluent Cloud.
 
 ## Architecture Diagram
 
