@@ -11,14 +11,6 @@ You'll learn about:
 
 ## Architecture Diagram
 
-### Existing Architecture
-
-<div align="center"> 
-  <img src="images/Exisiting_architecture.png" width =100% heigth=100%>
-</div>
-
-### Proposed Solution
-
 <div align="center"> 
   <img src="images/Solution.png" width =100% heigth=100%>
 </div>
