@@ -1,7 +1,7 @@
 # Azure HD Insights to Confluent Cloud - Transactional and Analytics
 
 In today's fast-paced business environment, companies rely heavily on technology to streamline their operations and stay ahead of the competition. One such company, ABC grocery delivery, faced several challenges with their Kafka implementation on Azure HDInsights, including a lack of expertise and operational knowledge to maintain their Kafka environment. To overcome these challenges and ensure high availability and reliability for their core operations, they decided to migrate to Confluent Cloud, a managed Kafka solution that offers several features to support their business needs.
-This demo walks you through an realtime processing of orders using Confluent Cloud.
+This demo walks you through data pipeline where data originates from Mongodb , stored and transformed in confluent cloud and sinked in databricks .
 
 ## Architecture Diagram
 
@@ -16,8 +16,7 @@ This demo walks you through an realtime processing of orders using Confluent Clo
 In order to successfully complete this demo you need to install few tools before getting started.
 
 - If you don't have a Confluent Cloud account, sign up for a free trial [here](https://www.confluent.io/confluent-cloud/tryfree).
-- Install Confluent Cloud CLI by following the instructions [here](https://docs.confluent.io/confluent-cli/current/install.html).
-- An Azure Account with permissions to create resources, sign up for an account [here](https://azure.microsoft.com/).
+- Install terraform by following the instructions [here](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).
 
 ## Prerequisites
 
@@ -32,65 +31,50 @@ In order to successfully complete this demo you need to install few tools before
 1. Create Confluent Cloud API keys by following [this](https://registry.terraform.io/providers/confluentinc/confluent/latest/docs/guides/sample-project#summary) guide.
    > **Note:** This is different than Kafka cluster API keys.
 
-### Oracle Database
-
-1. This demo uses an Oracle Standard Edition database hosted on AWS that is publicly accessible.
-
 ### MongoDB Atlas
 
 1. Sign up for a free MongoDB Atlas account [here](https://www.mongodb.com/).
 
 1. Create an API key pair so Terraform can create resources in the Atlas cluster. Follow the instructions [here](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs#configure-atlas-programmatic-access).
 
-### Azure SQL
+### Databricks
 
-1. Sign up for a free Azure account [here](https://azure.microsoft.com/).
+1. Sign up for a free Databricks account [here](https://www.databricks.com/).
 
 ## Setup
 
-## Connect MongoDB Atlas to Confluent Cloud
+1. This demo uses Terraform to spin up resources that are needed.
 
-You can create the MongoDB Atlas Sink connector either through CLI or Confluent Cloud web UI.
-
-<details>
-    <summary><b>CLI</b></summary>
-
-1. Run the following command to create the MongoDB Atlas Sink connector.
+1. Clone and enter this repository.
 
    ```bash
-   confluent connect cluster create --config-file confluent/actual_mongodb_sink.json
+   git clone https://github.com/K-rishav/Same-Day-Delivery.git
+   cd Same-Day-Delivery
+   ``` 
+
+### Build your cloud infrastructure
+
+1. Navigate to the repo's terraform directory.
+   ```bash
+   cd terraform
+   ```
+1. Log into your AWS account through command line.
+
+1. Initialize Terraform within the directory.
+   ```bash
+   terraform init
+   ```
+1. Create the Terraform plan.
+   ```bash
+   terraform plan
+   ```
+1. Apply the plan to create the infrastructure.
+
+   ```bash
+   terraform apply
    ```
 
-</details>
-<br>
-
-<details>
-    <summary><b>Confluent Cloud Web UI</b></summary>
-
-1. On the navigation menu, select **Connectors** and **+ Add connector**.
-1. In the search bar search for **MongoDB** and select the **MongoDB Atlas Sink** which is a fully-managed connector.
-1. Create a new MongoDB Atlas Sink connector and complete the required fields using `actual_mongodb_sink.json` file.
-
-</details>
-<br>
-
-Once the connector is in **Running** state navigate to **cloud.mongodb.com → Collections → demo-db-mod_FD_possible_stolen_card** and verify messages are showing up correctly.
-
-Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-mongo-db-sink.html) for detailed instructions about this connector.
-
-## Confluent Cloud Stream Governance
-
-Confluent offers data governance tools such as Stream Quality, Stream Catalog, and Stream Lineage in a package called Stream Governance. These features ensure your data is high quality, observable and discoverable. Learn more about **Stream Governance** [here](https://www.confluent.io/product/stream-governance/) and refer to the [docs](https://docs.confluent.io/cloud/current/stream-governance/overview.html) page for detailed information.
-
-1.  Navigate to https://confluent.cloud
-1.  Use the left hand-side menu and click on **Stream Lineage**.
-    Stream lineage provides a graphical UI of the end to end flow of your data. Both from the a bird’s eye view and drill-down magnification for answering questions like:
-
-    - Where did data come from?
-    - Where is it going?
-    - Where, when, and how was it transformed?
-
-    In the bird's eye view you see how one stream feeds into another one. As your pipeline grows and becomes more complex, you can use Stream lineage to debug and see where things go wrong and break.
+   > **Note:** Read the `main.tf` configuration file [to see what will be created](./terraform/main.tf).
 
 ---
 
@@ -100,11 +84,12 @@ Confluent offers data governance tools such as Stream Quality, Stream Catalog, a
 
 You want to delete any resources that were created during the demo so you don't incur additional charges.
 
-
+   ```bash
+   terraform destroy
+   ```
 
 # References
 
-1. Database modernization with Confluent Cloud [blog](https://www.confluent.io/blog/cloud-data-migrations-database-modernization-with-confluent/)
-2. Peering Connections in Confluent Cloud [doc](https://docs.confluent.io/cloud/current/networking/peering/index.html)
-3. MongoDB Atlas Sink Connector for Confluent Cloud [doc](https://docs.confluent.io/cloud/current/connectors/cc-mongo-db-sink.html)
-4. Stream Governance [page](https://www.confluent.io/product/stream-governance/) and [doc](https://docs.confluent.io/cloud/current/stream-governance/overview.html)
+1. Peering Connections in Confluent Cloud [doc](https://docs.confluent.io/cloud/current/networking/peering/index.html)
+2. MongoDB Atlas Sink Connector for Confluent Cloud [doc](https://docs.confluent.io/cloud/current/connectors/cc-mongo-db-sink.html)
+3. Stream Governance [page](https://www.confluent.io/product/stream-governance/) and [doc](https://docs.confluent.io/cloud/current/stream-governance/overview.html)
