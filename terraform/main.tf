@@ -302,8 +302,8 @@ resource "mongodbatlas_database_user" "demo-database-sameday-db-user" {
   auth_database_name = "admin"
 
   roles {
-    role_name     = "dbAdmin"
-    database_name = mongodbatlas_cluster.demo-database-sameday.name
+    role_name     = "readWriteAnyDatabase"
+    database_name = "admin"
   }
 }
 
