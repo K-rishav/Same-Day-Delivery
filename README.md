@@ -92,6 +92,36 @@ In order to successfully complete this demo you need to install few tools before
 
 ---
 
+## Connect Databricks Sink to Confluent Cloud
+
+You can create the Databricks  Sink connector either through CLI or Confluent Cloud web UI.
+
+<details>
+    <summary><b>CLI</b></summary>
+
+1. Run the following command to create the MongoDB Atlas Sink connector.
+
+   ```bash
+   confluent connect cluster create --config-file confluent/actual_databricks_sink.json
+   ```
+
+</details>
+<br>
+
+<details>
+    <summary><b>Confluent Cloud Web UI</b></summary>
+
+1. On the navigation menu, select **Connectors** and **+ Add connector**.
+1. In the search bar search for **Databricks** and select the **Databricks deltalake Sink** which is a fully-managed connector.
+1. Create a new Databricks deltalake Sink connector and complete the required fields using `actual_databricks_sink.json` file.
+
+</details>
+<br>
+
+Once the connector is in **Running** state navigate to Databricks page and verify messages are showing up correctly.
+
+Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-databricks-delta-lake-sink/cc-databricks-delta-lake-sink.html) for detailed instructions about this connector.
+
 ## CONGRATULATIONS
 
 # Teardown
