@@ -122,6 +122,21 @@ Once the connector is in **Running** state navigate to Databricks page and verif
 
 Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-databricks-delta-lake-sink/cc-databricks-delta-lake-sink.html) for detailed instructions about this connector.
 
+## Confluent Cloud Stream Governance
+
+Confluent offers data governance tools such as Stream Quality, Stream Catalog, and Stream Lineage in a package called Stream Governance. These features ensure your data is high quality, observable and discoverable. Learn more about **Stream Governance** [here](https://www.confluent.io/product/stream-governance/) and refer to the [docs](https://docs.confluent.io/cloud/current/stream-governance/overview.html) page for detailed information.
+
+1.  Navigate to https://confluent.cloud
+1.  Use the left hand-side menu and click on **Stream Lineage**.
+    Stream lineage provides a graphical UI of the end to end flow of your data. Both from the a bird’s eye view and drill-down magnification for answering questions like:
+
+    - Where did data come from?
+    - Where is it going?
+    - Where, when, and how was it transformed?
+
+    In the bird's eye view you see how one stream feeds into another one. As your pipeline grows and becomes more complex, you can use Stream lineage to debug and see where things go wrong and break.
+
+---
 ## CONGRATULATIONS
 
 Congratulations on building your streaming data pipelines for streaming data to cloud databases in Confluent Cloud! Your complete pipeline should resemble the following one.
