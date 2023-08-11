@@ -85,7 +85,7 @@ In order to successfully complete this demo you need to install few tools before
 1. Load the sample dataset in mongodb
    
    <div align="center"> 
-   <img src="images/load_sample_dataset.png" width =70% heigth=70%>
+   <img src="images/load_sample_dataset.png" width =100% heigth=100%>
    </div> 
 
   
