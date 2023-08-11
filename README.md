@@ -125,7 +125,8 @@ Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/
 ## CONGRATULATIONS
 
 Congratulations on building your streaming data pipelines for streaming data to cloud databases in Confluent Cloud! Your complete pipeline should resemble the following one.
-####Add the stream lineage ss
+
+### TODO Add the stream lineage ss
 
 # Teardown
 
