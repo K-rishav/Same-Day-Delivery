@@ -81,13 +81,14 @@ In order to successfully complete this demo you need to install few tools before
    ```bash
    terraform apply
    ```
+    > **Note:** Read the `main.tf` configuration file [to see what will be created](./terraform/main.tf).
 1. Load the sample dataset in mongodb
    
    <div align="center"> 
    <img src="images/load_sample_dataset.png" width =70% heigth=70%>
    </div> 
 
-   > **Note:** Read the `main.tf` configuration file [to see what will be created](./terraform/main.tf).
+  
 
 ---
 
