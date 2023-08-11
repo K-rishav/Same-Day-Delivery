@@ -2,7 +2,7 @@
   "name": "DatabricksDeltaLakeSinkConnector_0",
   "config": {
     "topics": "sample_topic_prefix.sample_analytics.accounts",
-    "input.data.format": "JSON",
+    "input.data.format": "AVRO",
     "connector.class": "DatabricksDeltaLakeSink",
     "name": "DatabricksDeltaLakeSinkConnector_0",
     "kafka.auth.mode": "KAFKA_API_KEY",
