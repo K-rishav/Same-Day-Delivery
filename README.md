@@ -1,7 +1,7 @@
 # Azure HD Insights to Confluent Cloud - Transactional and Analytics
 
 In today's fast-paced business environment, companies rely heavily on technology to streamline their operations and stay ahead of the competition. One such company, ABC grocery delivery, faced several challenges with their Kafka implementation on Azure HDInsights, including a lack of expertise and operational knowledge to maintain their Kafka environment. To overcome these challenges and ensure high availability and reliability for their core operations, they decided to migrate to Confluent Cloud, a managed Kafka solution that offers several features to support their business needs.
-This demo walks you through data pipeline where data originates from Mongodb , stored and transformed in confluent cloud and sinked in databricks .
+This demo walks you through data pipeline where data originates from Mongodb , stored in confluent cloud and sinked to databricks .
 
 ## Architecture Diagram
 
