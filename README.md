@@ -112,8 +112,8 @@ You can create the Databricks  Sink connector either through CLI or Confluent Cl
     <summary><b>Confluent Cloud Web UI</b></summary>
 
 1. On the navigation menu, select **Connectors** and **+ Add connector**.
-1. In the search bar search for **Databricks** and select the **Databricks deltalake Sink** which is a fully-managed connector.
-1. Create a new Databricks deltalake Sink connector and complete the required fields using `actual_databricks_sink.json` file.
+1. In the search bar search for **Databricks** and select the **Databricks delta lake Sink** which is a fully-managed connector.
+1. Create a new Databricks delta lake Sink connector and complete the required fields using `actual_databricks_sink.json` file.
 
 </details>
 <br>
@@ -136,4 +136,4 @@ You want to delete any resources that were created during the demo so you don't 
 
 1. Peering Connections in Confluent Cloud [doc](https://docs.confluent.io/cloud/current/networking/peering/index.html)
 2. MongoDB Atlas Sink Connector for Confluent Cloud [doc](https://docs.confluent.io/cloud/current/connectors/cc-mongo-db-sink.html)
-3. Stream Governance [page](https://www.confluent.io/product/stream-governance/) and [doc](https://docs.confluent.io/cloud/current/stream-governance/overview.html)
+3. Databricks deltalake [page](https://docs.confluent.io/cloud/current/connectors/cc-databricks-delta-lake-sink/cc-databricks-delta-lake-sink.html) 
