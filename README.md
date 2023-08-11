@@ -6,7 +6,7 @@ This demo walks you through data pipeline where data originates from Mongodb , s
 ## Architecture Diagram
 
 <div align="center"> 
-  <img src="images/Solution.png" width =100% heigth=100%>
+  <img src="images/Architecture.png" width =100% heigth=100%>
 </div>
 
 ---
