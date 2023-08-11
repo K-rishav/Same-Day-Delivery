@@ -52,6 +52,14 @@ In order to successfully complete this demo you need to install few tools before
    cd Same-Day-Delivery
    ``` 
 
+1. Edit the setup.properties file to manage all the values you'll need through the setup
+
+1. Source the setup.properties file 
+
+   ```bash
+   source setup.properties
+   ``` 
+
 ### Build your cloud infrastructure
 
 1. Navigate to the repo's terraform directory.
@@ -73,6 +81,7 @@ In order to successfully complete this demo you need to install few tools before
    ```bash
    terraform apply
    ```
+1. Load the sample dataset in mongodb 
 
    > **Note:** Read the `main.tf` configuration file [to see what will be created](./terraform/main.tf).
 

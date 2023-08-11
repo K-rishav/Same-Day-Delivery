@@ -352,9 +352,9 @@ resource "confluent_connector" "mongo-db-source" {
 }
 
 locals {
-  topic_prefix = "sample_topic_prefix"
-  database = "sample_anlaytics"
-  collection = "accounts"
+  topic_prefix = var.mongodb_source_connector_topic_prefix
+  database = var.mongodb_source_connector_database_name
+  collection = var.mongodb_source_connector_collection
   connection_host = replace(mongodbatlas_cluster.demo-database-sameday.connection_strings[0].standard_srv,"mongodb+srv://", "")
   connection_user = var.mongodbatlas_database_username
 }
