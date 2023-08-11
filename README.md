@@ -82,19 +82,19 @@ In order to successfully complete this demo you need to install few tools before
    terraform apply
    ```
     > **Note:** Read the `main.tf` configuration file [to see what will be created](./terraform/main.tf).
-1. Load the sample dataset in mongodb
+1. Load the sample dataset in Mongodb database that is just created using terraform.
    
    <div align="center"> 
    <img src="images/load_sample_dataset.png" width =100% heigth=100%>
    </div> 
 
-  
+Hurray! Mongodb data is offloaded to Confluent topic. Thanks to Mongo Atlas Source Connector. Now let's setup Databricks Sink Connector.
 
 ---
 
 ## Connect Databricks Sink to Confluent Cloud
 
-You can create the Databricks  Sink connector either through CLI or Confluent Cloud web UI.
+You can create the Databricks Sink connector either through CLI or Confluent Cloud web UI.
 
 <details>
     <summary><b>CLI</b></summary>
