@@ -91,6 +91,78 @@ In order to successfully complete this demo you need to install few tools before
 Hurray! Mongodb data is offloaded to Confluent topic. Thanks to Mongo Atlas Source Connector. Now let's setup Databricks Sink Connector.
 
 ---
+## Enrich Data Streams with ksqlDB
+
+Now that you have data flowing through Confluent, you can now easily build stream processing applications using ksqlDB. You are able to continuously transform, enrich, join, and aggregate your data using simple SQL syntax. You can gain value from your data directly from Confluent in real-time. Also, ksqlDB is a fully managed service within Confluent Cloud with a 99.9% uptime SLA. You can now focus on developing services and building your data pipeline while letting Confluent manage your resources for you.
+
+<B>This section will involve the creation of a KStream and KTable that will calculate the number of orders from a particular store location using simple SQL like commands.<B>
+
+If you’re interested in learning more about ksqlDB and the differences between streams and tables, I recommend reading these two blogs [here](https://www.confluent.io/blog/kafka-streams-tables-part-3-event-processing-fundamentals/) and [here](https://www.confluent.io/blog/how-real-time-stream-processing-works-with-ksqldb/).
+
+1. On the navigation menu click on **ksqlDB** and step into the cluster you created during setup.
+   To write streaming queries against topics, you will need to register the topics with ksqlDB as a stream or table.
+
+2. **VERY IMPORTANT** -- at the bottom of the editor, set `auto.offset.reset` to `earliest`, or enter the statement:
+
+   ```SQL
+   SET 'auto.offset.reset' = 'earliest';
+   ```
+
+   If you use the default value of `latest`, then ksqlDB will read form the tail of the topics rather than the beginning, which means streams and tables won't have all the data you think they should.
+
+3. Create a ksqlDB stream from `sales.sample_supplies.sales` topic.
+
+ ```
+   CREATE STREAM orders_raw 
+   WITH(
+   KAFKA_TOPIC='sales.sample_supplies.sales',
+   VALUE_FORMAT='AVRO'
+   );
+ ```
+4. Create another ksqlDB stream `orders_filtered` from `orders_raw` stream.
+
+   ```
+   CREATE STREAM orders_filtered 
+   WITH (KAFKA_TOPIC='orders_filtered') as 
+   SELECT fullDocument->_id,
+   fullDocument->customer , 
+   explode(fullDocument->items) as item,
+   fullDocument->storelocation,
+   fullDocument->saledate FROM orders_raw EMIT CHANGES;
+
+   ```
+
+   <div align="center"> 
+  <img src="images/Stream_Data_Display.jpeg" width =100% heigth=100%>
+</div>
+
+5. Create `total_count_order_per_storelocation_and_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
+
+ ```
+
+CREATE Table total_count_order_per_storelocation_and_per_item as
+SELECT concat(storelocation ,'_',item->name) as unique_key,
+       LATEST_BY_OFFSET(storelocation) as store_location,
+       LATEST_BY_OFFSET(item->name) as item_ordered,
+       COUNT(*) AS purchase_count
+FROM orders_filtered
+where item->name is not null
+GROUP BY concat(storelocation ,'_',item->name)
+EMIT CHANGES;
+
+```
+
+6. Use the following statement to query `total_count_order_per_storelocation_and_per_item` table to ensure it's being populated correctly.
+
+   ```SQL
+   SELECT * FROM total_count_order_per_storelocation_and_per_item;
+   ```
+
+   Stop the running query by clicking on **Stop**.
+<div align="center"> 
+  <img src="images/final-table-Output.jpeg" width =100% heigth=100%>
+</div>
+---
 
 ## Connect Databricks Sink to Confluent Cloud
 
@@ -99,7 +171,7 @@ You can create the Databricks Sink connector either through CLI or Confluent Clo
 <details>
     <summary><b>CLI</b></summary>
 
-1. Run the following command to create the MongoDB Atlas Sink connector.
+1. Run the following command to create the Databricks Sink connector.
 
    ```bash
    confluent connect cluster create --config-file confluent/actual_databricks_sink.json

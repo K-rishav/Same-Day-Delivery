@@ -1,7 +1,7 @@
 {
   "name": "DatabricksDeltaLakeSinkConnector_0",
   "config": {
-    "topics": "sample_topic_prefix.sample_analytics.accounts",
+    "topics": "sales.sample_supplies.sales",
     "input.data.format": "AVRO",
     "connector.class": "DatabricksDeltaLakeSink",
     "name": "DatabricksDeltaLakeSinkConnector_0",

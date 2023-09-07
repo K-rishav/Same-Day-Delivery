@@ -29,7 +29,7 @@ provider "mongodbatlas" {
 # }
 
 data "confluent_environment" "staging" {
-  id = "env-prp8zm"
+  id = "env-m81ok1"
 }
 
 # Stream Governance and Kafka clusters can be in different regions as well as different cloud providers,
@@ -56,7 +56,7 @@ resource "confluent_schema_registry_cluster" "essentials" {
 # Update the config to use a cloud provider and region of your choice.
 # https://registry.terraform.io/providers/confluentinc/confluent/latest/docs/resources/confluent_kafka_cluster
 resource "confluent_kafka_cluster" "basic" {
-  display_name = "inventory"
+  display_name = "sameday-delivery"
   availability = "SINGLE_ZONE"
   cloud        = "AWS"
   region       = "us-east-1"
@@ -81,7 +81,7 @@ resource "confluent_kafka_topic" "orders" {
 // 'app-manager' service account is required in this configuration to create 'orders' topic and grant ACLs
 // to 'app-producer' and 'app-consumer' service accounts.
 resource "confluent_service_account" "app-manager" {
-  display_name = "app-manager"
+  display_name = "sdd-app-manager"
   description  = "Service account to manage 'inventory' Kafka cluster"
 }
 
@@ -92,7 +92,7 @@ resource "confluent_role_binding" "app-manager-kafka-cluster-admin" {
 }
 
 resource "confluent_api_key" "app-manager-kafka-api-key" {
-  display_name = "app-manager-kafka-api-key"
+  display_name = "sdd-app-manager-kafka-api-key"
   description  = "Kafka API Key that is owned by 'app-manager' service account"
   owner {
     id          = confluent_service_account.app-manager.id
@@ -123,17 +123,17 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
 }
 
 resource "confluent_service_account" "app-consumer" {
-  display_name = "app-consumer"
+  display_name = "sdd-app-consumer"
   description  = "Service account to consume from 'orders' topic of 'inventory' Kafka cluster"
 }
 
 resource "confluent_service_account" "app-connector" {
-  display_name = "app-connector"
+  display_name = "sdd-app-connector"
   description  = "Service account of mongo db Source Connector to consume from 'orders' topic of 'inventory' Kafka cluster"
 }
 
 resource "confluent_api_key" "app-consumer-kafka-api-key" {
-  display_name = "app-consumer-kafka-api-key"
+  display_name = "sdd-app-consumer-kafka-api-key"
   description  = "Kafka API Key that is owned by 'app-consumer' service account"
   owner {
     id          = confluent_service_account.app-consumer.id
@@ -153,12 +153,12 @@ resource "confluent_api_key" "app-consumer-kafka-api-key" {
 }
 
 resource "confluent_service_account" "app-producer" {
-  display_name = "app-producer"
+  display_name = "sdd-app-producer"
   description  = "Service account to produce to 'orders' topic of 'inventory' Kafka cluster"
 }
 
 resource "confluent_api_key" "app-producer-kafka-api-key" {
-  display_name = "app-producer-kafka-api-key"
+  display_name = "sdd-app-producer-kafka-api-key"
   description  = "Kafka API Key that is owned by 'app-producer' service account"
   owner {
     id          = confluent_service_account.app-producer.id
@@ -337,7 +337,7 @@ resource "confluent_connector" "mongo-db-source" {
     "poll.await.time.ms" = "5000"
     "poll.max.batch.size" = "1000"
     "copy.existing" = "true"
-    "output.data.format" = "JSON"
+    "output.data.format" = "AVRO"
     "tasks.max" = "1"
   }
 

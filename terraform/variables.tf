@@ -48,16 +48,16 @@ variable "mongodbatlas_database_password" {
 variable "mongodb_source_connector_topic_prefix" {
   description = "Your connector will publish to kafka topics using the prefix provided. The connector automatically creates Kafka topics using the naming convention: <prefix>.<database-name>.<collection-name>."
   type        = string
-  default = "sample_topic_prefix"
+  default = "sales"
 }
 
 variable "mongodb_source_connector_database_name" {
   description = "MongoDB Atlas database name that needs to be watched by mongodb source connector"
   type        = string
-  default = "sample_analytics"
+  default = "sample_supplies"
 }
 variable "mongodb_source_connector_collection" {
   description = "MongoDB Atlas collection name that needs to be watched by mongodb source connector"
   type        = string
-  default = "accounts"
+  default = "sales"
 }
