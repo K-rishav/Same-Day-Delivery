@@ -1,6 +1,16 @@
 # Same Day Delivery
 
-In today's fast-paced business environment, companies rely heavily on technology to streamline their operations and stay ahead of the competition. One such company, ABC grocery delivery, faced several challenges with their Kafka implementation on Azure HDInsights, including a lack of expertise and operational knowledge to maintain their Kafka environment. To overcome these challenges and ensure high availability and reliability for their core operations, they decided to migrate to Confluent Cloud, a managed Kafka solution that offers several features to support their business needs.
+Today’s consumers expect their orders to be fulfilled rapidly. Retail giants like Amazon, Target, and Walmart all offer Same Day Delivery, and consumers now demand the same from other retailers; according to a recent study by McKinsey, 30% of consumers consider Same Day delivery as table stakes when making purchases online. 
+To enable a reliable ‘Same Day Delivery’ service, however, delivery companies must implement a data infrastructure which seamlessly connects disparate systems – customer orders, vendor stock levels, and last-mile delivery platforms all need to work in tandem to ensure that items arrive with the consumer on time. 
+
+## Challenges with Traditional Approaches:
+
+Before turning to Confluent Cloud, this company had been relying on Apache Kafka in Azure HDInsight for core operations; it was powering everything from order and merchant updates to communication with delivery drivers. Despite playing such a central role in the business, however, their previous implementation presented a number of challenges. 
+
+The main issue was that their team lacked the expertise required to maintain their Azure HDInsight implementation of Kafka. Without a fully-managed Kafka service, the team spent a significant amount of time troubleshooting. Ultimately, software upgrades and security patches were missed, and their streaming pipelines failed frequently – this led to outages in their delivery service, causing significant inconvenience to customers. 
+
+In addition to this, their previous implementation of Kafka prevented them from innovating further with data streaming, while also taking up a substantial proportion of their operating budget. In their previous setup on Azure HDInsights (shown below), they lacked managed connectors – not only did this increase the maintenance burden on the infrastructure team, but also severely limited the possibility to sync data to other datastores used in the organization. On top of this, their previous platform didn’t offer any form of stream processing, making it more difficult to use their data streams for real-time use cases. Lastly, as Azure HDInsights is Hadoop-based, the team had to stand up, run, and pay for an entire Hadoop cluster in order to use Kafka – an extra burden and cost.
+
 This demo walks you through data pipeline where data originates from Mongodb , stored in confluent cloud and sinked to databricks .
 
 ## Architecture Diagram
