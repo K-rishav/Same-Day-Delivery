@@ -112,13 +112,13 @@ If you’re interested in learning more about ksqlDB and the differences between
 
 3. Create a ksqlDB stream from `sales.sample_supplies.sales` topic.
 
- ```
+   ```
    CREATE STREAM orders_raw 
    WITH(
    KAFKA_TOPIC='sales.sample_supplies.sales',
    VALUE_FORMAT='AVRO'
    );
- ```
+   ```
 4. Create another ksqlDB stream `orders_filtered` from `orders_raw` stream.
 
    ```
@@ -129,7 +129,6 @@ If you’re interested in learning more about ksqlDB and the differences between
    explode(fullDocument->items) as item,
    fullDocument->storelocation,
    fullDocument->saledate FROM orders_raw EMIT CHANGES;
-
    ```
 
    <div align="center"> 
@@ -138,19 +137,17 @@ If you’re interested in learning more about ksqlDB and the differences between
 
 5. Create `total_count_order_per_storelocation_and_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
 
- ```
-
-CREATE Table total_count_order_per_storelocation_and_per_item as
-SELECT concat(storelocation ,'_',item->name) as unique_key,
-       LATEST_BY_OFFSET(storelocation) as store_location,
-       LATEST_BY_OFFSET(item->name) as item_ordered,
-       COUNT(*) AS purchase_count
-FROM orders_filtered
-where item->name is not null
-GROUP BY concat(storelocation ,'_',item->name)
-EMIT CHANGES;
-
-```
+   ```
+   CREATE Table total_count_order_per_storelocation_and_per_item as
+   SELECT concat(storelocation ,'_',item->name) as unique_key,
+         LATEST_BY_OFFSET(storelocation) as store_location,
+         LATEST_BY_OFFSET(item->name) as item_ordered,
+         COUNT(*) AS purchase_count
+   FROM orders_filtered
+   where item->name is not null
+   GROUP BY concat(storelocation ,'_',item->name)
+   EMIT CHANGES;
+   ```
 
 6. Use the following statement to query `total_count_order_per_storelocation_and_per_item` table to ensure it's being populated correctly.
 
@@ -162,6 +159,7 @@ EMIT CHANGES;
 <div align="center"> 
   <img src="images/final-table-Output.png" width =100% heigth=100%>
 </div>
+
 ---
 
 ## Connect Databricks Sink to Confluent Cloud
