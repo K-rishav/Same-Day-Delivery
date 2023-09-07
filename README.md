@@ -133,7 +133,7 @@ If you’re interested in learning more about ksqlDB and the differences between
    ```
 
    <div align="center"> 
-  <img src="images/Stream_Data_Display.jpeg" width =100% heigth=100%>
+  <img src="images/Stream_Data_Display.png" width =100% heigth=100%>
 </div>
 
 5. Create `total_count_order_per_storelocation_and_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
@@ -160,7 +160,7 @@ EMIT CHANGES;
 
    Stop the running query by clicking on **Stop**.
 <div align="center"> 
-  <img src="images/final-table-Output.jpeg" width =100% heigth=100%>
+  <img src="images/final-table-Output.png" width =100% heigth=100%>
 </div>
 ---
 
