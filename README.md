@@ -11,7 +11,7 @@ The main issue was that their team lacked the expertise required to maintain the
 
 In addition to this, their previous implementation of Kafka prevented them from innovating further with data streaming, while also taking up a substantial proportion of their operating budget. In their previous setup on Azure HDInsights (shown below), they lacked managed connectors – not only did this increase the maintenance burden on the infrastructure team, but also severely limited the possibility to sync data to other datastores used in the organization. On top of this, their previous platform didn’t offer any form of stream processing, making it more difficult to use their data streams for real-time use cases. Lastly, as Azure HDInsights is Hadoop-based, the team had to stand up, run, and pay for an entire Hadoop cluster in order to use Kafka – an extra burden and cost.
 
-<b> This demo walks you through data pipeline where data originates from Mongodb , stored in confluent cloud and sinked to databricks. </b>
+<b> This demo walks you through data pipeline where data originates from Mongodb , stored and processed in confluent cloud and sinked to databricks. </b>
 
 ## Architecture Diagram
 
