@@ -145,10 +145,10 @@ If you’re interested in learning more about ksqlDB and the differences between
   <img src="images/Stream_Data_Display.png" width =50% heigth=30%>
 </div>
 
-5. Create `total_count_order_per_storelocation_and_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
+5. Create `total_count_order_per_storelocation_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
 
    ```
-   CREATE Table total_count_order_per_storelocation_and_per_item as
+   CREATE Table total_count_order_per_storelocation_per_item with (kafka_topic='total_count_order_per_storelocation_per_item_table') as
    SELECT concat(storelocation ,'_',item->name) as unique_key,
          LATEST_BY_OFFSET(storelocation) as store_location,
          LATEST_BY_OFFSET(item->name) as item_ordered,
@@ -159,10 +159,10 @@ If you’re interested in learning more about ksqlDB and the differences between
    EMIT CHANGES;
    ```
 
-6. Use the following statement to query `total_count_order_per_storelocation_and_per_item` table to ensure it's being populated correctly.
+6. Use the following statement to query `total_count_order_per_storelocation_per_item` table to ensure it's being populated correctly.
 
    ```SQL
-   SELECT * FROM total_count_order_per_storelocation_and_per_item;
+   SELECT * FROM total_count_order_per_storelocation_per_item;
    ```
 
    Stop the running query by clicking on **Stop**.
@@ -219,9 +219,8 @@ Confluent offers data governance tools such as Stream Quality, Stream Catalog, a
 ---
 ## CONGRATULATIONS
 
-Congratulations on building your streaming data pipelines for streaming data to cloud databases in Confluent Cloud! Your complete pipeline should resemble the following one.
+Congratulations on building your streaming data pipelines for streaming data to cloud databases in Confluent Cloud!
 
-### TODO Add the stream lineage ss
 
 # Teardown
 
