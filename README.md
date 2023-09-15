@@ -59,7 +59,8 @@ In order to successfully complete this demo you need to install few tools before
 
 1. This demo uses Terraform to spin up resources that are needed.
    
-   Terraform spins up following resources
+   Terraform spins up the following resources:
+   
    1. Confluent Environment and Schema Registry
    2. Confluent Basic Cluster 
    3. Mongodb source connector
