@@ -11,7 +11,11 @@ The main issue was that their team lacked the expertise required to maintain the
 
 In addition to this, their previous implementation of Kafka prevented them from innovating further with data streaming, while also taking up a substantial proportion of their operating budget. In their previous setup on Azure HDInsights (shown below), they lacked managed connectors – not only did this increase the maintenance burden on the infrastructure team, but also severely limited the possibility to sync data to other datastores used in the organization. On top of this, their previous platform didn’t offer any form of stream processing, making it more difficult to use their data streams for real-time use cases. Lastly, as Azure HDInsights is Hadoop-based, the team had to stand up, run, and pay for an entire Hadoop cluster in order to use Kafka – an extra burden and cost.
 
-<b> This demo walks you through data pipeline where data originates from Mongodb , undergoes real-time processing in Confluent Cloud and sinked to Databricks. </b>
+<b> This demo walks you through a streaming data pipeline where data originates from Mongodb , undergoes real-time processing in Confluent Cloud and gets sent to Databricks. </b>
+
+## Data Walkthrough
+
+<add-details>
 
 ## Architecture Diagram
 
@@ -54,6 +58,7 @@ In order to successfully complete this demo you need to install few tools before
 ## Setup
 
 1. This demo uses Terraform to spin up resources that are needed.
+   <Todo:add-details>
 
 1. Clone and enter this repository.
 
@@ -219,7 +224,7 @@ Confluent offers data governance tools such as Stream Quality, Stream Catalog, a
 ---
 ## CONGRATULATIONS
 
-Congratulations on building your streaming data pipelines for streaming data to cloud databases in Confluent Cloud!
+Congratulations on building your streaming data pipelines between cloud databases and cloud data warehouses for same-day delivery use case in Confluent Cloud!
 
 
 # Teardown
