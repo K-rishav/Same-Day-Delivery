@@ -58,7 +58,12 @@ In order to successfully complete this demo you need to install few tools before
 ## Setup
 
 1. This demo uses Terraform to spin up resources that are needed.
-   Todo:add-details
+   
+   Terraform spins up following resources
+   1. Confluent Environment and Schema Registry
+   2. Confluent Basic Cluster 
+   3. Mongodb source connector
+   4. Service accounts
 
 1. Clone and enter this repository.
 
@@ -230,6 +235,10 @@ Congratulations on building your streaming data pipelines between cloud database
 # Teardown
 
 You want to delete any resources that were created during the demo so you don't incur additional charges.
+
+   ```
+   Delete your ksqldb cluster before running terraform destroy.
+   ```
 
    ```bash
    terraform destroy

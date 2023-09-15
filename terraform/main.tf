@@ -23,13 +23,13 @@ provider "mongodbatlas" {
   private_key = var.mongodbatlas_private_key
 }
 
+#create environment
+resource "confluent_environment" "demo" {
+  display_name = "Demo"
 
-# resource "confluent_environment" "staging" {
-#   display_name = "Staging"
-# }
-
-data "confluent_environment" "staging" {
-  id = "env-m81ok1"
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Stream Governance and Kafka clusters can be in different regions as well as different cloud providers,
@@ -44,7 +44,7 @@ resource "confluent_schema_registry_cluster" "essentials" {
   package = data.confluent_schema_registry_region.essentials.package
 
   environment {
-    id = data.confluent_environment.staging.id
+    id = confluent_environment.demo.id
   }
 
   region {
@@ -62,19 +62,7 @@ resource "confluent_kafka_cluster" "basic" {
   region       = "us-east-1"
   basic {}
   environment {
-    id = data.confluent_environment.staging.id
-  }
-}
-
-resource "confluent_kafka_topic" "orders" {
-  kafka_cluster {
-    id = confluent_kafka_cluster.basic.id
-  }
-  topic_name    = "orders"
-  rest_endpoint = confluent_kafka_cluster.basic.rest_endpoint
-  credentials {
-    key    = confluent_api_key.app-manager-kafka-api-key.id
-    secret = confluent_api_key.app-manager-kafka-api-key.secret
+    id = confluent_environment.demo.id
   }
 }
 
@@ -106,7 +94,7 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
     kind        = confluent_kafka_cluster.basic.kind
 
     environment {
-      id = data.confluent_environment.staging.id
+      id = confluent_environment.demo.id
     }
   }
 
@@ -122,61 +110,10 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
   ]
 }
 
-resource "confluent_service_account" "app-consumer" {
-  display_name = "sdd-app-consumer"
-  description  = "Service account to consume from 'orders' topic of 'inventory' Kafka cluster"
-}
-
 resource "confluent_service_account" "app-connector" {
   display_name = "sdd-app-connector"
   description  = "Service account of mongo db Source Connector to consume from 'orders' topic of 'inventory' Kafka cluster"
 }
-
-resource "confluent_api_key" "app-consumer-kafka-api-key" {
-  display_name = "sdd-app-consumer-kafka-api-key"
-  description  = "Kafka API Key that is owned by 'app-consumer' service account"
-  owner {
-    id          = confluent_service_account.app-consumer.id
-    api_version = confluent_service_account.app-consumer.api_version
-    kind        = confluent_service_account.app-consumer.kind
-  }
-
-  managed_resource {
-    id          = confluent_kafka_cluster.basic.id
-    api_version = confluent_kafka_cluster.basic.api_version
-    kind        = confluent_kafka_cluster.basic.kind
-
-    environment {
-      id = data.confluent_environment.staging.id
-    }
-  }
-}
-
-resource "confluent_service_account" "app-producer" {
-  display_name = "sdd-app-producer"
-  description  = "Service account to produce to 'orders' topic of 'inventory' Kafka cluster"
-}
-
-resource "confluent_api_key" "app-producer-kafka-api-key" {
-  display_name = "sdd-app-producer-kafka-api-key"
-  description  = "Kafka API Key that is owned by 'app-producer' service account"
-  owner {
-    id          = confluent_service_account.app-producer.id
-    api_version = confluent_service_account.app-producer.api_version
-    kind        = confluent_service_account.app-producer.kind
-  }
-
-  managed_resource {
-    id          = confluent_kafka_cluster.basic.id
-    api_version = confluent_kafka_cluster.basic.api_version
-    kind        = confluent_kafka_cluster.basic.kind
-
-    environment {
-      id = data.confluent_environment.staging.id
-    }
-  }
-}
-
 
 resource "confluent_kafka_acl" "app-connector-describe-on-cluster" {
   kafka_cluster {
@@ -310,7 +247,7 @@ resource "mongodbatlas_database_user" "demo-database-sameday-db-user" {
 # ------------------------------- mongodb -------------------------------# ------------------------------- mongodb -------------------------------
 resource "confluent_connector" "mongo-db-source" {
   environment {
-    id = data.confluent_environment.staging.id
+    id = confluent_environment.demo.id
   }
   kafka_cluster {
     id = confluent_kafka_cluster.basic.id
@@ -358,7 +295,4 @@ locals {
   connection_host = replace(mongodbatlas_cluster.demo-database-sameday.connection_strings[0].standard_srv,"mongodb+srv://", "")
   connection_user = var.mongodbatlas_database_username
 }
-
-output "mongo-cluster-url1"{
-    value = replace(mongodbatlas_cluster.demo-database-sameday.connection_strings[0].standard_srv,"mongodb+srv://", "")
-}
+# ------------------------------- mongodb -------------------------------# ------------------------------- mongodb -------------------------------
