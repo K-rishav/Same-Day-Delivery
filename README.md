@@ -15,7 +15,7 @@ In addition to this, their previous implementation of Kafka prevented them from 
 
 ## Data Walkthrough
 
-<add-details>
+Todo:add-details
 
 ## Architecture Diagram
 
@@ -58,7 +58,7 @@ In order to successfully complete this demo you need to install few tools before
 ## Setup
 
 1. This demo uses Terraform to spin up resources that are needed.
-   <Todo:add-details>
+   Todo:add-details
 
 1. Clone and enter this repository.
 
