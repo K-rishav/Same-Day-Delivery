@@ -15,7 +15,7 @@ In addition to this, their previous implementation of Kafka prevented them from 
 
 ## Data Walkthrough
 
-Todo:add-details
+The source data comprises customer orders made at various store locations, and it undergoes real-time processing through ksqldb to derive and store the count of orders for each item at each store location in a ktable.
 
 ## Architecture Diagram
 
