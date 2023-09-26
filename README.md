@@ -154,7 +154,7 @@ If you’re interested in learning more about ksqlDB and the differences between
    ```
 
    <div align="center"> 
-  <img src="images/Stream_Data_Display.png" width =50% heigth=30%>
+  <img src="images/ksqldb.png" width =50% heigth=30%>
 </div>
 
 5. Create `total_count_order_per_storelocation_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
@@ -168,7 +168,7 @@ If you’re interested in learning more about ksqlDB and the differences between
    FROM orders_filtered
    where item->name is not null
    GROUP BY concat(storelocation ,'_',item->name)
-   EMIT CHANGES;;
+   EMIT CHANGES;
    ```
 
 6. Use the following statement to query `total_count_order_per_storelocation_per_item` table to ensure it's being populated correctly.
