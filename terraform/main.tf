@@ -9,6 +9,10 @@ terraform {
       source  = "mongodb/mongodbatlas"
       version = "1.10.0"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.20.0"
+    }
   }
 }
 
@@ -26,10 +30,6 @@ provider "mongodbatlas" {
 #create environment
 resource "confluent_environment" "demo" {
   display_name = "Demo"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 # Stream Governance and Kafka clusters can be in different regions as well as different cloud providers,
@@ -77,6 +77,16 @@ resource "confluent_role_binding" "app-manager-kafka-cluster-admin" {
   principal   = "User:${confluent_service_account.app-manager.id}"
   role_name   = "CloudClusterAdmin"
   crn_pattern = confluent_kafka_cluster.basic.rbac_crn
+}
+
+resource "confluent_role_binding" "app-ksql-schema-registry-resource-owner" {
+  principal   = "User:${confluent_service_account.app-manager.id}"
+  role_name   = "ResourceOwner"
+  crn_pattern = format("%s/%s", confluent_schema_registry_cluster.essentials.resource_name, "subject=*")
+
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "confluent_api_key" "app-manager-kafka-api-key" {
@@ -204,7 +214,26 @@ resource "confluent_kafka_acl" "app-connector-write-on-data-preview-topics" {
     secret = confluent_api_key.app-manager-kafka-api-key.secret
   }
 }
+resource "confluent_ksql_cluster" "ksqldb" {
+  display_name = "ksqldb-cluster"
+  csu          = 1
 
+  kafka_cluster {
+    id = confluent_kafka_cluster.basic.id
+  }
+  credential_identity {
+    id = confluent_service_account.app-manager.id
+  }
+  environment {
+    id = confluent_environment.demo.id
+     
+  }
+  depends_on = [
+    confluent_role_binding.app-manager-kafka-cluster-admin,
+    confluent_role_binding.app-ksql-schema-registry-resource-owner,
+    confluent_schema_registry_cluster.essentials
+  ]
+}
 
 # ------------------------------- mongodb -------------------------------# ------------------------------- mongodb -------------------------------
 # Create a Project
@@ -296,3 +325,73 @@ locals {
   connection_user = var.mongodbatlas_database_username
 }
 # ------------------------------- mongodb -------------------------------# ------------------------------- mongodb -------------------------------
+
+
+
+# ------------------ aws - rds - Mysql ---------------#-------------------------------------------------------------------------------------------
+
+
+provider "aws" {
+  region = var.region
+}
+
+data "aws_availability_zones" "available" {}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.1.2"
+
+  name                 = "demo-vpc"
+  cidr                 = "10.0.0.0/16"
+  azs                  = data.aws_availability_zones.available.names
+  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+}
+
+resource "aws_db_subnet_group" "demo" {
+  name       = "demo-vpc-sg"
+  subnet_ids = module.vpc.public_subnets
+
+  tags = {
+    Name = "demo"
+  }
+}
+
+resource "aws_security_group" "rds" {
+  name   = "demo_rds"
+  vpc_id = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "demo_rds"
+  }
+}
+
+resource "aws_db_instance" "demo" {
+  identifier             = "demo"
+  instance_class         = "db.t3.micro"
+  allocated_storage      = 20
+  engine                 = "mysql"
+  engine_version         = "8.0"
+  username               = "admin"
+  password               = var.db_password
+  db_subnet_group_name   = aws_db_subnet_group.demo.name
+  vpc_security_group_ids = [aws_security_group.rds.id]
+  publicly_accessible    = true
+  skip_final_snapshot    = true
+  db_name                   = "sales"
+}

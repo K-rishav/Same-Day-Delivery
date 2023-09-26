@@ -48,7 +48,7 @@ variable "mongodbatlas_database_password" {
 variable "mongodb_source_connector_topic_prefix" {
   description = "Your connector will publish to kafka topics using the prefix provided. The connector automatically creates Kafka topics using the naming convention: <prefix>.<database-name>.<collection-name>."
   type        = string
-  default = "sales"
+  default = "demo"
 }
 
 variable "mongodb_source_connector_database_name" {
@@ -60,4 +60,15 @@ variable "mongodb_source_connector_collection" {
   description = "MongoDB Atlas collection name that needs to be watched by mongodb source connector"
   type        = string
   default = "sales"
+}
+
+variable "region" {
+  default     = "us-east-2"
+  description = "AWS region"
+}
+
+variable "db_password" {
+  description = "RDS root user password"
+  default = "admin123"
+  sensitive   = true
 }

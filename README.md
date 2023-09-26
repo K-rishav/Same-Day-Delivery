@@ -11,7 +11,7 @@ The main issue was that their team lacked the expertise required to maintain the
 
 In addition to this, their previous implementation of Kafka prevented them from innovating further with data streaming, while also taking up a substantial proportion of their operating budget. In their previous setup on Azure HDInsights (shown below), they lacked managed connectors – not only did this increase the maintenance burden on the infrastructure team, but also severely limited the possibility to sync data to other datastores used in the organization. On top of this, their previous platform didn’t offer any form of stream processing, making it more difficult to use their data streams for real-time use cases. Lastly, as Azure HDInsights is Hadoop-based, the team had to stand up, run, and pay for an entire Hadoop cluster in order to use Kafka – an extra burden and cost.
 
-<b> This demo walks you through a streaming data pipeline where data originates from Mongodb , undergoes real-time processing in Confluent Cloud and gets sent to Databricks. </b>
+<b> This demo walks you through a streaming data pipeline where data originates from Mongodb , undergoes real-time processing in Confluent Cloud and gets sent to AWS MySQL. </b>
 
 ## Data Walkthrough
 
@@ -51,9 +51,9 @@ In order to successfully complete this demo you need to install few tools before
 
 1. Create an API key pair so Terraform can create resources in the Atlas cluster. Follow the instructions [here](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs#configure-atlas-programmatic-access).
 
-### Databricks
+### AWS
 
-1. Sign up for a free Databricks account [here](https://www.databricks.com/).
+1. Sign up for a free AWS account [here](https://aws.amazon.com/).
 
 ## Setup
 
@@ -65,6 +65,7 @@ In order to successfully complete this demo you need to install few tools before
    2. Confluent Basic Cluster 
    3. Mongodb source connector
    4. Service accounts
+   5. AWS MySQL
 
 1. Clone and enter this repository.
 
@@ -109,7 +110,7 @@ In order to successfully complete this demo you need to install few tools before
    <img src="images/load_sample_dataset.png" width =100% heigth=100%>
    </div> 
 
-Hurray! Mongodb data is offloaded to Confluent topic. Thanks to Mongo Atlas Source Connector. Now let's setup Databricks Sink Connector.
+Hurray! Mongodb data is offloaded to Confluent topic. Thanks to Mongo Atlas Source Connector. Now let's setup MySQL Sink Connector.
 
 ---
 ## Enrich Data Streams with ksqlDB
@@ -131,12 +132,12 @@ If you’re interested in learning more about ksqlDB and the differences between
 
    If you use the default value of `latest`, then ksqlDB will read form the tail of the topics rather than the beginning, which means streams and tables won't have all the data you think they should.
 
-3. Create a ksqlDB stream from `sales.sample_supplies.sales` topic.
+3. Create a ksqlDB stream from `demo.sample_supplies.sales` topic.
 
    ```
    CREATE STREAM orders_raw 
    WITH(
-   KAFKA_TOPIC='sales.sample_supplies.sales',
+   KAFKA_TOPIC='demo.sample_supplies.sales',
    VALUE_FORMAT='AVRO'
    );
    ```
@@ -159,7 +160,7 @@ If you’re interested in learning more about ksqlDB and the differences between
 5. Create `total_count_order_per_storelocation_per_item` table based on the `orders_filtered` stream you just created. The table is updated in real-time every time an order is placed. This table shows number of orders of a particular item from a particular store location.
 
    ```
-   CREATE Table total_count_order_per_storelocation_per_item with (kafka_topic='total_count_order_per_storelocation_per_item_table') as
+   CREATE Table total_count_order_per_storelocation_per_item with (kafka_topic='total_count_order_per_storelocation_per_item_table',value_format='AVRO',key_format='AVRO') as
    SELECT concat(storelocation ,'_',item->name) as unique_key,
          LATEST_BY_OFFSET(storelocation) as store_location,
          LATEST_BY_OFFSET(item->name) as item_ordered,
@@ -167,7 +168,7 @@ If you’re interested in learning more about ksqlDB and the differences between
    FROM orders_filtered
    where item->name is not null
    GROUP BY concat(storelocation ,'_',item->name)
-   EMIT CHANGES;
+   EMIT CHANGES;;
    ```
 
 6. Use the following statement to query `total_count_order_per_storelocation_per_item` table to ensure it's being populated correctly.
@@ -183,17 +184,17 @@ If you’re interested in learning more about ksqlDB and the differences between
 
 ---
 
-## Connect Databricks Sink to Confluent Cloud
+## Connect MySQL Sink to Confluent Cloud
 
-You can create the Databricks Sink connector either through CLI or Confluent Cloud web UI.
+You can create the MySQL Sink connector either through CLI or Confluent Cloud web UI.
 
 <details>
     <summary><b>CLI</b></summary>
 
-1. Run the following command to create the Databricks Sink connector.
+1. Run the following command to create the MySQL Sink connector.
 
    ```bash
-   confluent connect cluster create --config-file confluent/actual_databricks_sink.json
+   confluent connect cluster create --config-file confluent/connect_config.json
    ```
 
 </details>
@@ -203,15 +204,15 @@ You can create the Databricks Sink connector either through CLI or Confluent Clo
     <summary><b>Confluent Cloud Web UI</b></summary>
 
 1. On the navigation menu, select **Connectors** and **+ Add connector**.
-1. In the search bar search for **Databricks** and select the **Databricks delta lake Sink** which is a fully-managed connector.
-1. Create a new Databricks delta lake Sink connector and complete the required fields using `actual_databricks_sink.json` file.
+1. In the search bar search for **MySQL** and select the **MySQL Sink** which is a fully-managed connector.
+1. Create a new MySQL Sink connector and complete the required fields.
 
 </details>
 <br>
 
-Once the connector is in **Running** state navigate to Databricks page and verify messages are showing up correctly.
+Once the connector is in **Running** state connect to MySQL and verify messages are showing up correctly.
 
-Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-databricks-delta-lake-sink/cc-databricks-delta-lake-sink.html) for detailed instructions about this connector.
+Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-mysql-sink.html) for detailed instructions about this connector.
 
 ## Confluent Cloud Stream Governance
 
@@ -230,16 +231,13 @@ Confluent offers data governance tools such as Stream Quality, Stream Catalog, a
 ---
 ## CONGRATULATIONS
 
-Congratulations on building your streaming data pipelines between cloud databases and cloud data warehouses for same-day delivery use case in Confluent Cloud!
+Congratulations on building your streaming data pipelines between cloud databases and cloud data warehouses for same-day delivery use case in Confluent Cloud! Your complete pipeline should resemble the following one.
+![Alt Text](images/stream-lineage.gif)
 
 
 # Teardown
 
 You want to delete any resources that were created during the demo so you don't incur additional charges.
-
-   ```
-   Delete your ksqldb cluster before running terraform destroy.
-   ```
 
    ```bash
    terraform destroy
@@ -249,4 +247,4 @@ You want to delete any resources that were created during the demo so you don't 
 
 1. Peering Connections in Confluent Cloud [doc](https://docs.confluent.io/cloud/current/networking/peering/index.html)
 2. MongoDB Atlas Sink Connector for Confluent Cloud [doc](https://docs.confluent.io/cloud/current/connectors/cc-mongo-db-sink.html)
-3. Databricks deltalake [page](https://docs.confluent.io/cloud/current/connectors/cc-databricks-delta-lake-sink/cc-databricks-delta-lake-sink.html) 
+3. AWS MySQL Sink [page](https://docs.confluent.io/cloud/current/connectors/cc-mysql-sink.html) 
