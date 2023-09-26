@@ -231,7 +231,7 @@ Confluent offers data governance tools such as Stream Quality, Stream Catalog, a
 ---
 ## CONGRATULATIONS
 
-Congratulations on building your streaming data pipelines between cloud databases and cloud data warehouses for same-day delivery use case in Confluent Cloud! Your complete pipeline should resemble the following one.![Alt Text](images/stream-lineage.gif)
+Congratulations on building your streaming data pipelines between cloud databases and cloud data warehouses for same-day delivery use case in Confluent Cloud! Your complete pipeline should resemble the following one.![Alt Text](images/stream-lineage.png)
 
 # Teardown
 
