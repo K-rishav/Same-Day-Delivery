@@ -15,7 +15,7 @@ In addition to this, their previous implementation of Kafka prevented them from 
 
 ## Data Walkthrough
 
-The source data comprises customer orders made at various store locations, and it undergoes real-time processing through ksqldb to derive and store the count of orders for each item at each store location in a ktable.
+The source data in MongoDB comprises customer orders made at various store locations, and it undergoes real-time processing through ksqldb to derive and store the count of orders for each item at each store location in a ktable and then sent to an instance of MySQL running on AWS.
 
 ## Architecture Diagram
 
