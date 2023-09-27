@@ -209,7 +209,9 @@ You can create the MySQL Sink connector either through CLI or Confluent Cloud we
 
 </details>
 <br>
-
+<div align="center"> 
+  <img src="images/mysql-table.png" width =100% heigth=100%>
+</div>
 Once the connector is in **Running** state connect to MySQL and verify messages are showing up correctly.
 
 Refer to our [documentation](https://docs.confluent.io/cloud/current/connectors/cc-mysql-sink.html) for detailed instructions about this connector.
