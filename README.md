@@ -65,7 +65,7 @@ In order to successfully complete this demo you need to install few tools before
    2. Confluent Basic Cluster 
    3. Mongodb source connector
    4. Service accounts
-   5. AWS MySQL
+   5. AWS RDS MySQL
 
 1. Clone and enter this repository.
 
